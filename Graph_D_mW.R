@@ -116,3 +116,43 @@ x_graph_box <- ggboxplot(dat_to_graph_original, x = "Solvent", y = "D", size = 2
   grids(linetype = "solid",color = "gray94",size = 1)+
   theme(axis.text.x = element_text(angle = 90) )
 x_graph_box
+
+
+
+x <- as.data.frame.table(table(dat$Solvent))
+
+
+x2 <- subset(dat,Solvent %in% summ_fam_or$compound)
+
+
+solv <- unique(x2$Solvent)
+xgraph_solv <- list()
+for(i in 1:length(solv)){
+  cat(i,"\n")
+  x2i <- x2
+x2a <- subset(x2i,Solvent  %in% solv[[i]])
+x2a <- x2a[,c(1,2,4,6,7)]; x2a <- as.data.frame(x2a)
+colnames(x2a) <- c("Solute","Family","M","D","Solvent")
+
+x3 <- ggscatter(x2a, x = "M", y = "D", size = 2,fill =  "Family",
+                        rug = F,# Add marginal rug
+                        facet.by="Family",
+                        short.panel.labs=F,
+                        title=solv[[i]],
+                        # ylab = expression(paste(Dx10^{-5},"/cm"^{2},"S"^{-1})),#cm^{2}s0^{-1}
+                        ylab = expression(paste(D,": cm"^{2},"S"^{-1})),#cm^{2}s0^{-1} 
+                        xlab = expression(paste("Mm/u"," ", "g mol"^{-1})),
+                        conf.int=T,add = "reg.line", repel = TRUE,
+                        color = "black", palette = "Dark2") +
+  stat_cor(aes(color = "black"), method = "spearman")+
+  rremove("legend")+
+  grids(linetype = "solid",color = "gray94",size = 1)+
+
+ggsave(paste0(out_dir,"/","graphics","/",solv[[i]],"_",Sys.Date(),".pdf"),x3,units="in",width=20,height=10,scale=2,dpi=600)
+xgraph_solv[[i]] <- x3
+
+}
+  
+
+
+x_author <- as.data.frame.table(table(dat$Reference))
