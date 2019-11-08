@@ -18,7 +18,7 @@ dat <- dat[which(!is.na(dat$`D(Cm2/s)`)),]
 dat <- dat[which(!is.na(dat$`Mm/U`)),]
 dat <- dat[which(!is.na(dat$Reactive)),]
 # plot(dat$`Mm/U`,dat$`D(Cm2/s) (10-5 CM2 s-1)`)
-
+unique(dat$Reactive)
 x <- as.data.frame.table(table(dat$Solvent))
 
 dat_to_graph_original <- dat[,c(2,5,6,8,9)]# 87 is solvent
@@ -65,9 +65,11 @@ x_graph <- ggscatter(x_sub, x = "Mm", y = "D",
                      #dot.size = 800,
                      legend.title="",
                      cor.coef = F,
-                    #  label = "Solute",
-                    #  font.label=c(48, "plain"),
-                    # xlim=c(min(x_sub$Mm)-10,max(x_sub$Mm)+10),
+                     
+                     label = "Solute",
+                     font.label=c(48, "plain"),
+                     
+                     xlim=c(min(x_sub$Mm)-10,max(x_sub$Mm)+10),
                      ylim=c(min(x_sub$D),max(x_sub$D)),
                      # ylab = expression(paste(Dx10^{-5},"/cm"^{2},"S"^{-1})),#cm^{2}s0^{-1}
                      ylab = expression(paste("Diffusion coefficient (cm"^{2},"S"^{-1},") x 10"^{-5})),#cm^{2}s0^{-1} 
@@ -88,7 +90,7 @@ x_graph <- ggscatter(x_sub, x = "Mm", y = "D",
   bgcolor("#FFFFFF")+
   theme(panel.background = element_rect(fill = "gray90"),
         text=element_text(size=70),
-        axis.text.x  =element_text(size=70,angle = 90),
+        axis.text.x  =element_text(size=50,angle = 90),
         axis.text.y  = element_text(size=70,colour="black"),
         legend.title=element_text(size=70,colour="black"))+
   scale_x_continuous(breaks = seq(min(x_sub$Mm), max(x_sub$Mm)+40, 20),labels=scaleFUN)+ 
@@ -102,7 +104,28 @@ x_graph <- ggscatter(x_sub, x = "Mm", y = "D",
   #grids(linetype = "solid",color = "gray94",size = 1)
 
 #x_graph
-ggsave(paste0(out_dir,"/",as.character(Solvent_list[[i]]),"_",Sys.Date(),".png"),x_graph,units="in",width=21,height=19,scale=2,dpi=300)
+ggsave(paste0(out_dir,"/",as.character(Solvent_list[[i]]),"_",Sys.Date(),".png"),x_graph,units="in",width=22,height=19,scale=2,dpi=300)
 
 })
+####################################
+dat_to_graph_original2 <- dat_to_graph_original
+dat_to_graph_original2$Mm <- dat_to_graph_original2$Mm/100000
 
+
+x_graph_box <- ggboxplot(dat_to_graph_original2, x = "Solvent", y = "D", size = 2,fill =  "Classification",
+                         rug = F,# Add marginal rug
+                         #facet.by="Solvent",
+                         short.panel.labs=F,
+                         
+                         # ylab = expression(paste(Dx10^{-5},"/cm"^{2},"S"^{-1})),#cm^{2}s0^{-1}
+                         ylab = expression(paste("Diffusion coefficient (cm"^{2},"S"^{-1},") x 10"^{-5})),#cm^{2}s0^{-1} 
+                         xlab = "",
+                         conf.int=T,add = "reg.line", repel = TRUE,
+                         #color = "black", 
+                         palette = "Dark2") +
+  stat_cor(aes(color = "black"), method = "spearman")+
+  # rremove("legend")+
+  grids(linetype = "solid",color = "gray94",size = 1)+
+  theme(axis.text.x = element_text(angle = 90) )
+
+x_graph_box

@@ -2,7 +2,7 @@
 require(pacman)
 #Calling up libraries
 pacman::p_load(webchem,googlesheets,ggplot2,dplyr,BBmisc,rcurl,rvest,classyfireR)#Chemmine
-library(gtools)
+# library(gtools)
 
 # if (!requireNamespace("BiocManager", quietly=TRUE))
 #   install.packages("BiocManager")
