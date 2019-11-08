@@ -246,7 +246,7 @@
       bgcolor("#FFFFFF")+
       theme(panel.background = element_rect(fill = "white"),
             text=element_text(size=70),
-            axis.text.x  =element_text(size=50,angle = 90),
+            axis.text.x  =element_text(size=70,angle = 90),
             axis.text.y  = element_text(size=70,colour="black"),
             legend.title=element_text(size=70,colour="black"),
            axis.line = element_line(color = "black",size = 1.2,linetype = "solid"))+
